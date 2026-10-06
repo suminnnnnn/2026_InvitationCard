@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PLAYLIST 초대장 만들기 | 상명대학교 커뮤니케이션디자인전공 제 39회 졸업전시회</title>
+  <meta name="description" content="이름을 입력하고 나만의 졸업전시 초대장을 만들어 보세요.">
+
+  <!-- 링크 미리보기(OG). og:image는 배포 도메인이 정해지면 절대 경로(https://도메인/assets/card.jpg)로 바꿔 주세요. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PLAYLIST — 졸업전시에 초대합니다">
+  <meta property="og:description" content="상명대학교 커뮤니케이션디자인전공 제 39회 졸업전시회. 이름을 입력하고 초대장을 만들어 보세요.">
+  <meta property="og:image" content="assets/card.jpg">
+  <meta property="og:image:width" content="1102">
+  <meta property="og:image:height" content="868">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#121212">
+
+  <link rel="preload" href="fonts/Pretendard-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <header class="masthead">
+      <img class="masthead-vinyl" src="assets/vinyl.svg" alt="">
+      <h1 class="masthead-title">PLAYLIST</h1>
+      <p class="masthead-subtitle outline-white">상명대학교 디자인대학<br>커뮤니케이션디자인전공<br>제 39회 졸업전시회</p>
+      <p class="masthead-badge">
+        <img src="assets/brackets.svg" alt="">
+        <span class="outline-white">Invitation Card</span>
+      </p>
+    </header>
+
+    <!-- 화면 1: 이름 입력 -->
+    <section id="screen-form" class="screen" hidden>
+      <form id="name-form" class="form" novalidate autocomplete="off">
+        <div class="field">
+          <label class="field-label" for="input-to">초대장 받는 분</label>
+          <div class="field-row">
+            <label class="field-prefix" for="input-to">To.</label>
+            <input id="input-to" type="text" inputmode="text" enterkeyhint="next"
+                   placeholder="(입력하세요)" autocapitalize="off" spellcheck="false">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="input-from">초대장 보내는 분</label>
+          <div class="field-row">
+            <label class="field-prefix" for="input-from">From.</label>
+            <input id="input-from" type="text" inputmode="text" enterkeyhint="done"
+                   placeholder="(입력하세요)" autocapitalize="off" spellcheck="false">
+          </div>
+        </div>
+        <button id="btn-create" class="btn" type="submit" disabled>
+          <span class="outline-gray">초대장 만들기</span>
+          <img class="icon icon-play" src="assets/icon-play.svg" alt="">
+        </button>
+      </form>
+    </section>
+
+    <!-- 화면 2: 초대장 생성 / 저장 -->
+    <section id="screen-card" class="screen" hidden>
+      <div class="card-stage">
+        <div class="card-tilt">
+          <!-- #card 영역만 PNG로 캡처됩니다 (기울기·그림자는 바깥 .card-tilt에 있어 저장 이미지에 포함되지 않음) -->
+          <div id="card" class="card">
+            <img src="assets/card.jpg" alt="PLAYLIST 졸업전시 초대장. 2026.10.21(수)–10.26(월), 마루아트센터">
+            <p class="card-name card-name-to fit outline-white" id="card-to-name"></p>
+            <p class="card-name card-name-from fit outline-white" id="card-from-name"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btn-save" class="btn" type="button">
+          <span class="btn-text outline-gray">저장하기</span>
+          <img class="icon icon-plus" src="assets/icon-plus.svg" alt="">
+        </button>
+        <button id="btn-back" class="btn" type="button">
+          <span class="outline-gray">다시하기</span>
+          <img class="icon icon-repeat" src="assets/icon-repeat.svg" alt="">
+        </button>
+      </div>
+
+      <div id="inapp-notice" class="notice" hidden>
+        <p>앱 안에서 열린 브라우저에서는 저장이 잘 안 될 수 있어요.<br>
+          <span id="inapp-hint">메뉴(⋯)에서 ‘다른 브라우저로 열기’를 선택해 주세요.</span></p>
+        <button id="btn-external" class="btn-small" type="button" hidden>외부 브라우저로 열기</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <img class="footer-clocks" src="assets/clocks.svg" alt="">
+      <p class="footer-links">
+        <a href="https://www.instagram.com/smucd2026" target="_blank" rel="noopener">@smucd2026</a><br>
+        <a href="https://smucd2026.com" target="_blank" rel="noopener">smucd2026.com</a>
+      </p>
+    </footer>
+  </main>
+
+  <!-- 데스크톱 접속 시: 모바일 접속 안내 + QR -->
+  <div id="desktop-gate" class="gate" hidden>
+    <h1 class="gate-title">PLAYLIST</h1>
+    <p class="gate-message">모바일로 접속해주세요</p>
+    <div id="desktop-qr" class="gate-qr" role="img" aria-label="이 페이지로 연결되는 QR 코드"></div>
+    <p class="gate-hint">휴대폰 카메라로 QR 코드를 찍어 주세요</p>
+  </div>
+
+  <!-- 다운로드가 안 되는 환경용: 이미지를 띄우고 길게 눌러 저장 -->
+  <div id="save-overlay" class="overlay" hidden role="dialog" aria-modal="true" aria-label="이미지 저장">
+    <p class="overlay-hint">이미지를 길게 눌러 저장하세요</p>
+    <img id="save-image" alt="초대장 이미지">
+    <button id="btn-overlay-close" class="btn-small btn-on-dark" type="button">닫기</button>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="vendor/html-to-image.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
