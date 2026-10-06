@@ -95,6 +95,33 @@ img { display: block; }
   height: 46.9rem;
   max-width: none;
 }
+/* 첫 진입 모션: 레코드판이 위에서 떨어져 자리보다 조금 더 내려갔다가 쫀득하게 되튕기며 자리 잡는다.
+   모든 구간에 After Effects의 Easy Ease(영향 33%)와 같은 곡선을 써서 키프레임마다 부드럽게 감속·가속한다 */
+.masthead-vinyl { animation: vinyl-drop 0.95s cubic-bezier(0.333, 0, 0.667, 1) both; }
+@keyframes vinyl-drop {
+  0%   { transform: translateY(-105%); }
+  40%  { transform: translateY(6%); }
+  57%  { transform: translateY(-4%); }
+  72%  { transform: translateY(2.2%); }
+  86%  { transform: translateY(-0.9%); }
+  100% { transform: translateY(0); }
+}
+.masthead-cover,
+.masthead-title,
+.masthead-subtitle,
+.masthead-badge { animation: masthead-in 0.3s 0.3s cubic-bezier(0.333, 0, 0.667, 1) both; }
+@keyframes masthead-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .masthead-vinyl,
+  .masthead-cover,
+  .masthead-title,
+  .masthead-subtitle,
+  .masthead-badge { animation: none; }
+}
+
 /* 부제 글자 사이로 레코드판의 검은 부분이 비쳐 보이지 않게 뒤를 흰색으로 가린다 */
 .masthead-cover {
   position: absolute;
@@ -254,7 +281,7 @@ img { display: block; }
 .card {
   width: 27.7rem;
   height: auto;
-  aspect-ratio: 1102 / 868;
+  aspect-ratio: 1100 / 868;
   background: #fff;
   /* 길게 눌러 바로 저장할 수 있게 */
   -webkit-touch-callout: default;

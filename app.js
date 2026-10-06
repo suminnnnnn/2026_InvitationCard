@@ -163,11 +163,11 @@
 
   /* ---------- 화면 2: 초대장 이미지 만들기 ---------- */
 
-  // 배경 이미지(assets/card.jpg)는 Figma "초대장" 프레임(551×434)의 2배 크기에서 이름만 뺀 것.
+  // 배경 이미지(assets/card.jpg)는 Figma "초대장" 프레임(550×434)을 2배 크기로 내보내면서 이름만 뺀 것.
   // 아래 이름 값은 같은 프레임의 텍스트 레이어 값을 그대로 옮겼다 (단위: 프레임 px).
   var CARD = {
     src: "assets/card.jpg",
-    width: 1102,
+    width: 1100,
     height: 868,
     scale: 2,                       // 프레임 1px = 이미지 2px
     fontSize: 29,                   // Pretendard Black
