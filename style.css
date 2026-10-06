@@ -255,6 +255,8 @@ img { display: block; }
   letter-spacing: 0.01em;
 }
 /* 글자 크기가 줄어도 "To." / "From."과 같은 기준선에 놓이도록 원래 크기의 보이지 않는 기준 글자를 둔다 */
+/* 이름 외곽선: 흰색 3px (글자 크기가 줄어도 두께는 유지) */
+.card-name.outline-white { --o: 0.3rem; }
 .card-name::before { content: "\200b"; font-size: 1.65rem; }
 .card-name-to   { left: 15.9%; top: 7%;    width: 80%; }
 .card-name-from { left: 69.6%; top: 49.5%; width: 28.4%; }
