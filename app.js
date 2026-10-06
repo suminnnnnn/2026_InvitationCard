@@ -3,6 +3,8 @@
 
   // 이름 최대 글자 수 (초대장 레이아웃 기준)
   var MAX = 10;
+  // true면 데스크톱에서 "모바일로 접속해주세요" + QR만 보여 준다. (확인 작업 중이라 임시로 꺼 둠 — 배포 전 true로 되돌릴 것)
+  var MOBILE_ONLY = false;
 
   var $ = function (id) { return document.getElementById(id); };
   var screenForm = $("screen-form");
@@ -11,7 +13,7 @@
   var inputTo = $("input-to");
   var inputFrom = $("input-from");
   var btnCreate = $("btn-create");
-  var card = $("card");
+  var cardImage = $("card-image");
   var btnSave = $("btn-save");
   var btnBack = $("btn-back");
   var overlay = $("save-overlay");
@@ -27,8 +29,6 @@
   var isKakao = /KAKAOTALK/i.test(ua);
   var isInApp = isKakao ||
     /Instagram|FBAN|FBAV|FB_IAB|Line\/|NAVER\(inapp|DaumApps|everytimeApp|Twitter|Threads|; wv\)/i.test(ua);
-  // WebKit은 첫 캡처에서 폰트/이미지가 빠지는 경우가 있어 예열 렌더가 필요하다
-  var isWebKit = isIOS || (/Safari/i.test(ua) && !/Chrome|Chromium|Edg|Android/i.test(ua));
 
   /* ---------- 이름 처리 ---------- */
 
@@ -60,20 +60,30 @@
     window.scrollTo(0, 0);
   }
 
+  var currentNames = { to: "", from: "" };
+
   function showCard(names) {
-    $("card-to-name").textContent = names.to;
-    $("card-from-name").textContent = names.from;
+    currentNames = names;
     screenForm.hidden = true;
     screenCard.hidden = false;
     window.scrollTo(0, 0);
 
-    fitAll();
-    // 폰트가 늦게 로드되면 글자 폭이 달라지므로 다시 맞춘 뒤, 저장용 이미지를 미리 만들어 둔다.
-    // (미리 만들어 둬야 버튼을 누른 직후 공유 시트를 띄울 수 있다 — 사용자 제스처 유효 시간 제한)
-    fontsReady().then(function () {
-      fitAll();
-      getBlob().catch(function () { /* 저장 버튼을 눌렀을 때 다시 시도 */ });
+    // 이름이 들어간 초대장 이미지를 한 번만 만들어 미리보기와 저장에 똑같이 쓴다.
+    // (미리 만들어 둬야 저장 버튼을 누른 직후 공유 시트를 띄울 수 있다 — 사용자 제스처 유효 시간 제한)
+    cardImage.alt = "To. " + names.to + ", From. " + names.from + " — PLAYLIST 졸업전시 초대장";
+    getBlob().then(function (blob) {
+      if (currentNames !== names) return;
+      setPreview(URL.createObjectURL(blob));
+    }).catch(function (err) {
+      console.error(err);
     });
+  }
+
+  var previewUrl = null;
+  function setPreview(url) {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = url;
+    cardImage.src = url || CARD.src;
   }
 
   function route() {
@@ -151,76 +161,102 @@
     submit();
   });
 
-  /* ---------- 화면 2: 글자 크기 맞춤 ---------- */
+  /* ---------- 화면 2: 초대장 이미지 만들기 ---------- */
 
-  var FIT_MIN_RATIO = 0.45;
+  // 배경 이미지(assets/card.jpg)는 Figma "초대장" 프레임(551×434)의 2배 크기에서 이름만 뺀 것.
+  // 아래 이름 값은 같은 프레임의 텍스트 레이어 값을 그대로 옮겼다 (단위: 프레임 px).
+  var CARD = {
+    src: "assets/card.jpg",
+    width: 1102,
+    height: 868,
+    scale: 2,                       // 프레임 1px = 이미지 2px
+    fontSize: 29,                   // Pretendard Black
+    lineHeight: 35,
+    stroke: 3,                      // 흰색, 바깥쪽
+    to:   { x: 95,  y: 31,  maxWidth: 436 },
+    from: { x: 393, y: 217, maxWidth: 148 },
+    minFontRatio: 0.45,             // 이름이 길면 이 비율까지 글자를 줄이고, 그래도 넘치면 말줄임
+  };
+  var CARD_FONT_FAMILY = '"Pretendard", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  // Pretendard의 기준선 위치(ascent / (ascent + descent)) — 텍스트 상자 위쪽에서 기준선까지의 비율
+  var BASELINE_RATIO = 1950 / 2444;
 
-  function fitText(el) {
-    el.style.fontSize = "";
-    var size = parseFloat(getComputedStyle(el).fontSize);
-    var min = size * FIT_MIN_RATIO;
-    while (el.scrollWidth > el.clientWidth && size > min) {
-      size -= 0.5;
-      el.style.fontSize = size + "px";
+  function cardFont(size) {
+    return "900 " + size + "px " + CARD_FONT_FAMILY;
+  }
+
+  var cardBgPromise = null;
+  function loadCardBackground() {
+    if (!cardBgPromise) {
+      cardBgPromise = new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { cardBgPromise = null; reject(new Error("card image failed to load")); };
+        img.src = CARD.src;
+      });
     }
+    return cardBgPromise;
   }
 
-  function fitAll() {
-    if (screenCard.hidden) return;
-    card.querySelectorAll(".fit").forEach(fitText);
+  // 웹폰트가 로드된 뒤 그려야 한다 (폰트 미적용 상태로 저장되는 문제 방지)
+  function loadCardFont(text) {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return document.fonts.load(cardFont(CARD.fontSize), text).catch(function () { /* 기본 글꼴로 그린다 */ });
   }
 
-  /* ---------- 화면 2: 캡처 ---------- */
+  function drawName(ctx, text, slot) {
+    var k = CARD.scale;
+    var maxWidth = slot.maxWidth * k;
+    var size = CARD.fontSize * k;
+    var minSize = size * CARD.minFontRatio;
 
-  function fontsReady() {
-    return document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    ctx.font = cardFont(size);
+    while (ctx.measureText(text).width > maxWidth && size > minSize) {
+      size -= 1;
+      ctx.font = cardFont(size);
+    }
+    if (ctx.measureText(text).width > maxWidth) {
+      var chars = Array.from(text);
+      while (chars.length > 1 && ctx.measureText(chars.join("") + "…").width > maxWidth) chars.pop();
+      text = chars.join("") + "…";
+    }
+
+    var x = slot.x * k;
+    var baseline = (slot.y + CARD.lineHeight * BASELINE_RATIO) * k;
+    ctx.textBaseline = "alphabetic";
+    ctx.lineJoin = "round";
+    // 바깥쪽 외곽선: 두께의 2배로 선을 긋고 그 위에 글자를 채운다
+    ctx.lineWidth = CARD.stroke * 2 * k;
+    ctx.strokeStyle = "#fff";
+    ctx.strokeText(text, x, baseline);
+    ctx.fillStyle = "#000";
+    ctx.fillText(text, x, baseline);
   }
 
-  function imagesReady() {
-    var imgs = Array.prototype.slice.call(card.querySelectorAll("img"));
-    return Promise.all(imgs.map(function (img) {
-      if (img.complete && img.naturalWidth) return null;
-      return new Promise(function (resolve) {
-        img.addEventListener("load", resolve, { once: true });
-        img.addEventListener("error", resolve, { once: true });
+  function render(names) {
+    return Promise.all([loadCardBackground(), loadCardFont(names.to + names.from)]).then(function (results) {
+      var canvas = document.createElement("canvas");
+      canvas.width = CARD.width;
+      canvas.height = CARD.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(results[0], 0, 0, CARD.width, CARD.height);
+      drawName(ctx, names.to, CARD.to);
+      drawName(ctx, names.from, CARD.from);
+      return new Promise(function (resolve, reject) {
+        canvas.toBlob(function (blob) {
+          if (blob) resolve(blob);
+          else reject(new Error("capture failed"));
+        }, "image/png");
       });
-    }));
-  }
-
-  var CARD_SOURCE_WIDTH = 1102;
-
-  var fontCssPromise = null;
-  function getFontCss() {
-    if (!fontCssPromise) fontCssPromise = window.htmlToImage.getFontEmbedCSS(card);
-    return fontCssPromise;
-  }
-
-  function render() {
-    return Promise.all([fontsReady(), imagesReady()])
-      .then(getFontCss)
-      .then(function (fontEmbedCSS) {
-        var options = {
-          // 초대장 원본 이미지 해상도(가로 1102px)로 저장 — 화면 표시 크기의 약 3~4배
-          pixelRatio: CARD_SOURCE_WIDTH / card.offsetWidth,
-          fontEmbedCSS: fontEmbedCSS,
-        };
-        var warmUp = isWebKit ? window.htmlToImage.toCanvas(card, options) : Promise.resolve();
-        return warmUp.then(function () {
-          return window.htmlToImage.toBlob(card, options);
-        });
-      })
-      .then(function (blob) {
-        if (!blob) throw new Error("capture failed");
-        return blob;
-      });
+    });
   }
 
   // 같은 초대장을 여러 번 저장할 때 다시 그리지 않도록 캐시
   var blobCache = { key: null, promise: null };
   function getBlob() {
-    var key = [$("card-to-name").textContent, $("card-from-name").textContent, card.offsetWidth].join("|");
+    var key = currentNames.to + "\n" + currentNames.from;
     if (blobCache.key !== key) {
-      var promise = render();
+      var promise = render(currentNames);
       blobCache = { key: key, promise: promise };
       promise.catch(function () {
         if (blobCache.promise === promise) blobCache = { key: null, promise: null };
@@ -232,7 +268,7 @@
   /* ---------- 화면 2: 저장 ---------- */
 
   function fileName() {
-    var to = $("card-to-name").textContent
+    var to = currentNames.to
       .replace(/[\\/:*?"<>|\u0000-\u001f]/g, "")
       .replace(/^[.\s]+|[.\s]+$/g, "");
     return "초대장" + (to ? "_" + to : "") + ".png";
@@ -315,6 +351,10 @@
   /* ---------- 화면 2: 다시하기 ---------- */
 
   btnBack.addEventListener("click", function () {
+    setPreview(null);
+    // 입력했던 이름도 비우고 처음부터 다시
+    inputTo.value = "";
+    inputFrom.value = "";
     history.pushState(null, "", location.pathname);
     route();
   });
@@ -366,13 +406,12 @@
   /* ---------- 시작 ---------- */
 
   // 모바일 전용: 데스크톱에서는 안내 문구와 현재 주소의 QR 코드만 보여 준다
-  if (!isMobile) {
+  if (MOBILE_ONLY && !isMobile) {
     showDesktopGate();
     return;
   }
 
   setupInAppNotice();
   window.addEventListener("popstate", route);
-  window.addEventListener("resize", fitAll);
   route();
 })();

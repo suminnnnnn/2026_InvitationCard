@@ -24,7 +24,8 @@
 
     <header class="masthead">
       <img class="masthead-vinyl" src="assets/vinyl.svg" alt="">
-      <h1 class="masthead-title">PLAYLIST</h1>
+      <div class="masthead-cover"></div>
+      <h1 class="masthead-title outline-white">PLAYLIST</h1>
       <p class="masthead-subtitle outline-white">상명대학교 디자인대학<br>커뮤니케이션디자인전공<br>제 39회 졸업전시회</p>
       <p class="masthead-badge">
         <img src="assets/brackets.svg" alt="">
@@ -62,12 +63,8 @@
     <section id="screen-card" class="screen" hidden>
       <div class="card-stage">
         <div class="card-tilt">
-          <!-- #card 영역만 PNG로 캡처됩니다 (기울기·그림자는 바깥 .card-tilt에 있어 저장 이미지에 포함되지 않음) -->
-          <div id="card" class="card">
-            <img src="assets/card.jpg" alt="PLAYLIST 졸업전시 초대장. 2026.10.21(수)–10.26(월), 마루아트센터">
-            <p class="card-name card-name-to fit outline-white" id="card-to-name"></p>
-            <p class="card-name card-name-from fit outline-white" id="card-from-name"></p>
-          </div>
+          <!-- 이름이 들어간 초대장 이미지로 교체된다. 저장되는 파일과 같은 이미지 (기울기는 화면 표시용) -->
+          <img id="card-image" class="card" src="assets/card.jpg" alt="PLAYLIST 졸업전시 초대장">
         </div>
       </div>
 
@@ -115,7 +112,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script src="vendor/html-to-image.js"></script>
   <script src="vendor/qrcode.js"></script>
   <script src="app.js"></script>
 </body>
