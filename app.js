@@ -3,8 +3,8 @@
 
   // 이름 최대 글자 수 (초대장 레이아웃 기준)
   var MAX = 10;
-  // true면 데스크톱에서 "모바일로 접속해주세요" + QR만 보여 준다. (확인 작업 중이라 임시로 꺼 둠 — 배포 전 true로 되돌릴 것)
-  var MOBILE_ONLY = false;
+  // true면 데스크톱에서 "모바일로 접속해주세요" + QR만 보여 준다. (데스크톱에서 확인하려면 잠시 false로)
+  var MOBILE_ONLY = true;
 
   var $ = function (id) { return document.getElementById(id); };
   var screenForm = $("screen-form");
