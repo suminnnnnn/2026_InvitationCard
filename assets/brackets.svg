@@ -1,6 +1,23 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="171" height="24" viewBox="0 0 171 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="171" height="24" viewBox="0 0 171 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="Group 2720">
-<path id="Vector" d="M10.25 23.25H0.75V0.75H10.25V1.98242L9.91113 2.2041C8.81211 2.92396 7.74793 4.26439 6.95605 6.01465C6.1689 7.75466 5.67681 9.8443 5.67676 11.998V12.002C5.67681 14.1554 6.16952 16.2443 6.95703 17.9844C7.74931 19.7349 8.81344 21.0759 9.91113 21.7959L10.25 22.0186V23.25Z" fill="#9DFC00" stroke="#9DFC00" stroke-width="1.5"/>
-<path id="Vector_2" d="M170.25 0.75V23.25H160.75V22.0186L161.089 21.7959C162.187 21.0759 163.251 19.7349 164.043 17.9844C164.83 16.2443 165.323 14.1554 165.323 12.002V11.998C165.323 9.84262 164.831 7.75263 164.044 6.0127C163.252 4.26228 162.189 2.92234 161.09 2.2041L160.75 1.98242V0.75H170.25Z" fill="#9DFC00" stroke="#9DFC00" stroke-width="1.5"/>
+<g id="Vector">
+<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z" fill="#9DFC00"/>
+<mask id="stroke0_0_4" maskUnits="userSpaceOnUse" x="-0.5" y="-0.5" width="12" height="25" fill="black">
+<rect fill="white" x="-0.5" y="-0.5" width="12" height="25"/>
+<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z"/>
+</mask>
+<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z" stroke-width="3" stroke="#9DFC00" mask="url(#stroke0_0_4)"/>
 </g>
+<g id="Vector_2">
+<use xlink:href="#stroke1_0_4" fill="#9DFC00"/>
+<mask id="stroke2_0_4" maskUnits="userSpaceOnUse" x="159.5" y="-0.5" width="12" height="25" fill="black">
+<rect fill="white" x="159.5" y="-0.5" width="12" height="25"/>
+<use xlink:href="#stroke1_0_4"/>
+</mask>
+<path d="M166.073 11.9984C166.073 7.46711 164.009 3.21722 161.5 1.57675V1.5H169.5V22.5H161.5V22.4233C164.006 20.7796 166.073 16.5297 166.073 12.0016V11.9984Z" stroke-width="3" stroke="#9DFC00" mask="url(#stroke2_0_4)"/>
+</g>
+</g>
+<defs>
+<path id="stroke1_0_4" d="M166.073 11.9984C166.073 7.46711 164.009 3.21722 161.5 1.57675V1.5H169.5V22.5H161.5V22.4233C164.006 20.7796 166.073 16.5297 166.073 12.0016V11.9984Z"/>
+</defs>
 </svg>

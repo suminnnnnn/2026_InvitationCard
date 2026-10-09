@@ -4,7 +4,7 @@
   // 이름 최대 글자 수 (초대장 레이아웃 기준)
   var MAX = 10;
   // true면 데스크톱에서 "모바일로 접속해주세요" + QR만 보여 준다. (데스크톱에서 확인하려면 잠시 false로)
-  var MOBILE_ONLY = false;
+  var MOBILE_ONLY = true;
 
   var $ = function (id) { return document.getElementById(id); };
   var screenForm = $("screen-form");
@@ -163,12 +163,12 @@
 
   /* ---------- 화면 2: 초대장 이미지 만들기 ---------- */
 
-  // 배경 이미지(assets/card.jpg)는 Figma "초대장" 프레임을 2배 크기로 내보낸 것. "To." 라벨(35px)은 들어 있고
+  // 배경 이미지(assets/card.png)는 Figma "초대장" 프레임을 2배 크기로 내보낸 것. "To." 라벨(35px)은 들어 있고
   // "From." 라벨과 이름은 빠져 있다 — From.은 이름 길이에 따라 위치가 바뀌므로 여기서 그린다.
   // 아래 값은 같은 프레임 기준 (단위: 프레임 px).
   var CARD = {
-    src: "assets/card.jpg",
-    width: 1100,
+    src: "assets/card.png",
+    width: 1102,
     height: 868,
     scale: 2,                       // 프레임 1px = 이미지 2px
     fontSize: 32,                   // 이름. Pretendard Black
@@ -210,7 +210,8 @@
   // 바깥쪽 외곽선: 두께의 2배로 선을 긋고 그 위에 글자를 채운다
   function drawOutlined(ctx, text, x, baseline) {
     ctx.textBaseline = "alphabetic";
-    ctx.lineJoin = "round";
+    ctx.lineJoin = "miter";
+    ctx.miterLimit = 4;
     ctx.lineWidth = CARD.stroke * 2 * CARD.scale;
     ctx.strokeStyle = "#fff";
     ctx.strokeText(text, x, baseline);
@@ -254,7 +255,8 @@
     var x = endX - (ctx.measureText(text).width + text.length * tracking);
     // 외곽선이 옆 글자를 덮지 않도록 외곽선을 모두 그린 뒤 글자를 채운다
     ctx.textBaseline = "alphabetic";
-    ctx.lineJoin = "round";
+    ctx.lineJoin = "miter";
+    ctx.miterLimit = 4;
     ctx.lineWidth = CARD.stroke * 2 * k;
     ctx.strokeStyle = "#fff";
     for (i = 0; i < text.length; i++) ctx.strokeText(text[i], x + offsets[i], baseline);

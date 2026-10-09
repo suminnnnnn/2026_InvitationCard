@@ -6,12 +6,12 @@
   <title>PLAYLIST 초대장 만들기 | 상명대학교 커뮤니케이션디자인전공 제 39회 졸업전시회</title>
   <meta name="description" content="이름을 입력하고 나만의 졸업전시 초대장을 만들어 보세요.">
 
-  <!-- 링크 미리보기(OG). og:image는 배포 도메인이 정해지면 절대 경로(https://도메인/assets/card.jpg)로 바꿔 주세요. -->
+  <!-- 링크 미리보기(OG). og:image는 배포 도메인이 정해지면 절대 경로(https://도메인/assets/card.png)로 바꿔 주세요. -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="PLAYLIST — 졸업전시에 초대합니다">
   <meta property="og:description" content="상명대학교 커뮤니케이션디자인전공 제 39회 졸업전시회. 이름을 입력하고 초대장을 만들어 보세요.">
-  <meta property="og:image" content="assets/card.jpg">
-  <meta property="og:image:width" content="1100">
+  <meta property="og:image" content="assets/card.png">
+  <meta property="og:image:width" content="1102">
   <meta property="og:image:height" content="868">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#121212">
@@ -24,12 +24,12 @@
 
     <header class="masthead">
       <img class="masthead-vinyl" src="assets/vinyl.svg" alt="">
-      <div class="masthead-cover"></div>
-      <h1 class="masthead-title outline-white">PLAYLIST</h1>
-      <p class="masthead-subtitle outline-white">상명대학교 디자인대학<br>커뮤니케이션디자인전공<br>제 39회 졸업전시회</p>
+      <h1 class="masthead-title outline-white" data-text="PLAYLIST">PLAYLIST</h1>
+      <!-- 부제는 Figma에서 흰 외곽선까지 도형으로 내보낸 SVG -->
+      <img class="masthead-subtitle" src="assets/subtitle.svg" alt="상명대학교 디자인대학 커뮤니케이션디자인전공 제39회 졸업전시회">
       <p class="masthead-badge">
         <img src="assets/brackets.svg" alt="">
-        <span class="outline-white">Invitation Card</span>
+        <span class="outline-white" data-text="Invitation Card">Invitation Card</span>
       </p>
     </header>
 
@@ -53,8 +53,8 @@
           </div>
         </div>
         <button id="btn-create" class="btn" type="submit" disabled>
-          <span class="outline-gray">초대장 만들기</span>
-          <img class="icon icon-play" src="assets/icon-play.svg" alt="">
+          <!-- 글자와 아이콘이 한 덩어리인 Figma SVG -->
+          <img src="assets/btn-create.svg" alt="초대장 만들기">
         </button>
       </form>
     </section>
@@ -64,17 +64,17 @@
       <div class="card-stage">
         <div class="card-tilt">
           <!-- 이름이 들어간 초대장 이미지로 교체된다. 저장되는 파일과 같은 이미지 (기울기는 화면 표시용) -->
-          <img id="card-image" class="card" src="assets/card.jpg" alt="PLAYLIST 졸업전시 초대장">
+          <img id="card-image" class="card" src="assets/card.png" alt="PLAYLIST 졸업전시 초대장">
         </div>
       </div>
 
       <div class="actions">
         <button id="btn-save" class="btn" type="button">
-          <span class="btn-text outline-gray">저장하기</span>
+          <span class="btn-text">저장하기</span>
           <img class="icon icon-plus" src="assets/icon-plus.svg" alt="">
         </button>
         <button id="btn-back" class="btn" type="button">
-          <span class="outline-gray">다시하기</span>
+          <span>다시하기</span>
           <img class="icon icon-repeat" src="assets/icon-repeat.svg" alt="">
         </button>
       </div>

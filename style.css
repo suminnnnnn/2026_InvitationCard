@@ -15,7 +15,6 @@
   --ink: #171717;        /* Grayscale-12 */
   --ink-footer: #242424;
   --gray: #8b8b8b;       /* Grayscale-6 */
-  --outline-gray: #dfdfdf;
   --purple: #8845ff;
   --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
@@ -54,32 +53,24 @@ img { display: block; }
   background: #fff;
 }
 
-/* 글자 외곽선. text-stroke는 글자 안쪽을 파먹고 paint-order는 구형 웹뷰에서 안 먹어서 그림자 32방향으로 만든다 */
-/* 두께는 Figma의 바깥쪽 스트로크 값 (기본 3px, 부제만 4px) */
-.outline-white { --o: 0.3rem; --oc: #fff; }
-.outline-gray  { --o: 0.3rem; --oc: var(--outline-gray); }
-.outline-white,
-.outline-gray {
-  text-shadow:
-    calc(var(--o) * 1) calc(var(--o) * 0) 0 var(--oc), calc(var(--o) * 0.981) calc(var(--o) * 0.195) 0 var(--oc),
-    calc(var(--o) * 0.924) calc(var(--o) * 0.383) 0 var(--oc), calc(var(--o) * 0.831) calc(var(--o) * 0.556) 0 var(--oc),
-    calc(var(--o) * 0.707) calc(var(--o) * 0.707) 0 var(--oc), calc(var(--o) * 0.556) calc(var(--o) * 0.831) 0 var(--oc),
-    calc(var(--o) * 0.383) calc(var(--o) * 0.924) 0 var(--oc), calc(var(--o) * 0.195) calc(var(--o) * 0.981) 0 var(--oc),
-    calc(var(--o) * 0) calc(var(--o) * 1) 0 var(--oc), calc(var(--o) * -0.195) calc(var(--o) * 0.981) 0 var(--oc),
-    calc(var(--o) * -0.383) calc(var(--o) * 0.924) 0 var(--oc), calc(var(--o) * -0.556) calc(var(--o) * 0.831) 0 var(--oc),
-    calc(var(--o) * -0.707) calc(var(--o) * 0.707) 0 var(--oc), calc(var(--o) * -0.831) calc(var(--o) * 0.556) 0 var(--oc),
-    calc(var(--o) * -0.924) calc(var(--o) * 0.383) 0 var(--oc), calc(var(--o) * -0.981) calc(var(--o) * 0.195) 0 var(--oc),
-    calc(var(--o) * -1) calc(var(--o) * 0) 0 var(--oc), calc(var(--o) * -0.981) calc(var(--o) * -0.195) 0 var(--oc),
-    calc(var(--o) * -0.924) calc(var(--o) * -0.383) 0 var(--oc), calc(var(--o) * -0.831) calc(var(--o) * -0.556) 0 var(--oc),
-    calc(var(--o) * -0.707) calc(var(--o) * -0.707) 0 var(--oc), calc(var(--o) * -0.556) calc(var(--o) * -0.831) 0 var(--oc),
-    calc(var(--o) * -0.383) calc(var(--o) * -0.924) 0 var(--oc), calc(var(--o) * -0.195) calc(var(--o) * -0.981) 0 var(--oc),
-    calc(var(--o) * -0) calc(var(--o) * -1) 0 var(--oc), calc(var(--o) * 0.195) calc(var(--o) * -0.981) 0 var(--oc),
-    calc(var(--o) * 0.383) calc(var(--o) * -0.924) 0 var(--oc), calc(var(--o) * 0.556) calc(var(--o) * -0.831) 0 var(--oc),
-    calc(var(--o) * 0.707) calc(var(--o) * -0.707) 0 var(--oc), calc(var(--o) * 0.831) calc(var(--o) * -0.556) 0 var(--oc),
-    calc(var(--o) * 0.924) calc(var(--o) * -0.383) 0 var(--oc), calc(var(--o) * 0.981) calc(var(--o) * -0.195) 0 var(--oc);
-}
-
 /* ---------- 상단 (두 화면 공통) ---------- */
+
+/* 글자 외곽선 (Figma의 바깥쪽 흰 스트로크 3px, 모서리는 각지게). text-stroke는 글자 안쪽을 파먹고 paint-order는
+   구형 웹뷰에서 안 먹어서, 같은 글자를 ::before로 뒤에 한 벌 더 깔고 거기에만 두 배 두께의 스트로크를 준다.
+   글자는 data-text에 한 번 더 적어 둔다 */
+.outline-white { --o: 0.3rem; isolation: isolate; }
+.outline-white::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: -1;
+  -webkit-text-stroke: calc(var(--o) * 2) #fff;
+  stroke-linejoin: miter;
+  stroke-miterlimit: 4;
+  pointer-events: none;
+}
 
 .masthead {
   position: relative;
@@ -106,7 +97,6 @@ img { display: block; }
   86%  { transform: translateY(-0.9%); }
   100% { transform: translateY(0); }
 }
-.masthead-cover,
 .masthead-title,
 .masthead-subtitle,
 .masthead-badge { animation: masthead-in 0.3s 0.3s cubic-bezier(0.333, 0, 0.667, 1) both; }
@@ -116,21 +106,11 @@ img { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .masthead-vinyl,
-  .masthead-cover,
   .masthead-title,
   .masthead-subtitle,
   .masthead-badge { animation: none; }
 }
 
-/* 부제 글자 사이로 레코드판의 검은 부분이 비쳐 보이지 않게 뒤를 흰색으로 가린다 */
-.masthead-cover {
-  position: absolute;
-  left: 10.158rem;
-  top: 11.348rem;
-  width: 15.842rem;
-  height: 5.812rem;
-  background: #fff;
-}
 .masthead-title {
   position: absolute;
   left: 0;
@@ -143,13 +123,10 @@ img { display: block; }
 }
 .masthead-subtitle {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 9.7rem;
-  font-size: 2.2rem;
-  line-height: 1.27;
-  letter-spacing: -0.06rem;
-  --o: 0.4rem;
+  left: 7.3rem;
+  top: 9.703rem;
+  width: 21.468rem;
+  height: 8.481rem;
 }
 .masthead-badge {
   position: absolute;
@@ -172,6 +149,16 @@ img { display: block; }
   height: 2.4rem;
 }
 .masthead-badge span { position: relative; }
+/* 글자 뒤를 흰색으로 가려 레코드판 위에서도 읽히게 한다 */
+.masthead-badge::before {
+  content: "";
+  position: absolute;
+  left: 1.95rem;
+  top: 0.6rem;
+  width: 13.3rem;
+  height: 1.2rem;
+  background: #fff;
+}
 
 /* ---------- 화면 공통 ---------- */
 
@@ -202,11 +189,9 @@ img { display: block; }
 .btn:active:not(:disabled) { transform: scale(0.96); }
 .btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-/* 아이콘 SVG는 3px 외곽선을 포함한 크기라, 음수 마진으로 외곽선만큼 겹쳐 시안의 간격을 맞춘다 */
-.icon { flex: none; margin: -0.3rem; }
-.icon-play   { width: 3.365rem; height: 2.5112rem; }
-.icon-plus   { width: 2.9rem; height: 2.9rem; }
-.icon-repeat { width: 3.134rem; height: 2.812rem; }
+.icon { flex: none; position: relative; top: 0.09rem; }
+.icon-plus   { width: 1.98584rem; height: 1.98584rem; }
+.icon-repeat { width: 2.30742rem; height: 1.98662rem; }
 
 /* ---------- 화면 1 ---------- */
 
@@ -260,8 +245,9 @@ img { display: block; }
 
 #btn-create {
   align-self: center;
-  margin-top: 4.9rem;
+  margin-top: 5.6rem;
 }
+#btn-create img { width: 14.7934rem; height: 2.01377rem; }
 
 /* ---------- 화면 2 ---------- */
 
@@ -274,14 +260,14 @@ img { display: block; }
 }
 .card-tilt {
   transform: rotate(-6deg);
-  box-shadow: 0 0 0.8rem 0.4rem rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 0.8rem 0.2rem rgba(0, 0, 0, 0.25);
 }
 
 /* 이름이 들어간 초대장 이미지 (app.js가 만든 저장용 이미지를 그대로 보여 준다) */
 .card {
-  width: 27.7rem;
+  width: 28rem;
   height: auto;
-  aspect-ratio: 1100 / 868;
+  aspect-ratio: 551 / 434;
   background: #fff;
   /* 길게 눌러 바로 저장할 수 있게 */
   -webkit-touch-callout: default;
@@ -291,8 +277,9 @@ img { display: block; }
   display: flex;
   justify-content: space-between;
   margin-top: 4.3rem;
-  padding: 0 4.2rem;
+  padding: 0 4.49rem 0 4.2rem;
 }
+#btn-save { gap: 0.7rem; }
 
 .notice {
   display: flex;
