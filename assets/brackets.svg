@@ -1,23 +1,6 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="171" height="24" viewBox="0 0 171 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="Group 2720">
-<g id="Vector">
-<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z" fill="#9DFC00"/>
-<mask id="stroke0_0_4" maskUnits="userSpaceOnUse" x="-0.5" y="-0.5" width="12" height="25" fill="black">
-<rect fill="white" x="-0.5" y="-0.5" width="12" height="25"/>
-<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z"/>
-</mask>
-<path d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z" stroke-width="3" stroke="#9DFC00" mask="url(#stroke0_0_4)"/>
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="171" height="24" viewBox="0 0 171 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 2720" fill="#9DFC00" stroke="#9DFC00" stroke-width="3">
+<path id="Vector" d="M4.9267 11.9984C4.9267 7.47031 6.99058 3.22042 9.5 1.57675V1.5H1.5V22.5H9.5V22.4233C6.99386 20.7796 4.9267 16.5297 4.9267 12.0016V11.9984Z"/>
+<path id="Vector_2" d="M166.073 11.9984C166.073 7.46711 164.009 3.21722 161.5 1.57675V1.5H169.5V22.5H161.5V22.4233C164.006 20.7796 166.073 16.5297 166.073 12.0016V11.9984Z"/>
 </g>
-<g id="Vector_2">
-<use xlink:href="#stroke1_0_4" fill="#9DFC00"/>
-<mask id="stroke2_0_4" maskUnits="userSpaceOnUse" x="159.5" y="-0.5" width="12" height="25" fill="black">
-<rect fill="white" x="159.5" y="-0.5" width="12" height="25"/>
-<use xlink:href="#stroke1_0_4"/>
-</mask>
-<path d="M166.073 11.9984C166.073 7.46711 164.009 3.21722 161.5 1.57675V1.5H169.5V22.5H161.5V22.4233C164.006 20.7796 166.073 16.5297 166.073 12.0016V11.9984Z" stroke-width="3" stroke="#9DFC00" mask="url(#stroke2_0_4)"/>
-</g>
-</g>
-<defs>
-<path id="stroke1_0_4" d="M166.073 11.9984C166.073 7.46711 164.009 3.21722 161.5 1.57675V1.5H169.5V22.5H161.5V22.4233C164.006 20.7796 166.073 16.5297 166.073 12.0016V11.9984Z"/>
-</defs>
 </svg>
