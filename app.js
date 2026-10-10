@@ -18,6 +18,8 @@
   var btnBack = $("btn-back");
   var overlay = $("save-overlay");
   var saveImage = $("save-image");
+  var overlayHint = overlay.querySelector(".overlay-hint");
+  var OVERLAY_HINT = overlayHint.textContent;
   var toast = $("toast");
 
   /* ---------- 환경 감지 ---------- */
@@ -27,6 +29,7 @@
   var isAndroid = /Android/i.test(ua);
   var isMobile = isIOS || isAndroid;
   var isKakao = /KAKAOTALK/i.test(ua);
+  var isNaver = /NAVER\(inapp/i.test(ua);
   var isInApp = isKakao ||
     /Instagram|FBAN|FBAV|FB_IAB|Line\/|NAVER\(inapp|DaumApps|everytimeApp|Twitter|Threads|; wv\)/i.test(ua);
 
@@ -324,11 +327,12 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
   }
 
-  function showOverlay(blob) {
+  function showOverlay(blob, hint) {
     // 일부 인앱 브라우저는 blob: URL 이미지를 길게 눌러 저장하지 못해 data URL을 쓴다
     var reader = new FileReader();
     reader.onload = function () {
       saveImage.src = reader.result;
+      overlayHint.textContent = hint || OVERLAY_HINT;
       overlay.hidden = false;
     };
     reader.readAsDataURL(blob);
@@ -346,8 +350,22 @@
       file = new File([blob], name, { type: "image/png" });
     } catch (e) { /* File 생성자 미지원 */ }
 
-    // 1) 모바일: 공유 시트 → "이미지 저장"
-    if (isMobile && file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    // 1) 안드로이드: 공유 시트 대신 바로 다운로드
+    if (isAndroid) {
+      if (isNaver) {
+        // 네이버 앱은 버전에 따라 다운로드가 조용히 실패할 수 있어 길게 눌러 저장도 함께 띄운다
+        download(blob, name);
+        showOverlay(blob, "저장되지 않았다면 이미지를 길게 눌러 저장하세요");
+        return Promise.resolve();
+      }
+      if (!isInApp) {
+        download(blob, name);
+        showToast("초대장을 저장했어요");
+        return Promise.resolve();
+      }
+    }
+    // 2) iOS: 공유 시트 → "이미지 저장"
+    if (isIOS && file && navigator.canShare && navigator.canShare({ files: [file] })) {
       return navigator.share({ files: [file] }).catch(function (err) {
         if (err && err.name === "AbortError") return; // 사용자가 공유 시트를 닫음
         showOverlay(blob);
@@ -358,7 +376,7 @@
       showOverlay(blob);
       return Promise.resolve();
     }
-    // 2) 일반 다운로드
+    // 4) 일반 다운로드
     download(blob, name);
     showToast("초대장을 저장했어요");
     return Promise.resolve();
